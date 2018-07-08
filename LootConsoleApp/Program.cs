@@ -5,22 +5,48 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 using Funq;
 using CocNET;
 using CocNET.Interfaces;
+
+// Console App to Log CoC Loot values and store in DB
+// John Harvey
 
 namespace LootConsoleApp
 {
     class Program
     {
+        // class level variables to hold fetched loot values
         public static int totalGold, totalElixer, totalDark, trophies;
         
         static void Main(string[] args)
         {
-
             SqlConnection con;      // connection variables
             SqlCommand com;
             DateTime localDate = DateTime.Now;  // date now for loot logging date
+
+            
+             // helper code to delete rows when needed
+            string line;
+            int rowRemove;
+
+            do
+            {
+                Console.Write("Enter row Id to delete, or type exit: ");
+                line = Console.ReadLine();
+                if (line == "exit")
+                {
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    rowRemove = Convert.ToInt32(line);
+                    DeleteRow(rowRemove);
+                }
+            } while (line != "exit");
+            
+
 
             try   // connect to clash API
             {
@@ -64,7 +90,7 @@ namespace LootConsoleApp
 
             try
             {
-                using (con = new SqlConnection(Properties.Settings.Default.connectionString)) // new sql connection using the db connection string
+                using (con = new SqlConnection(Properties.Settings.Default.newLootConStr)) // new sql connection using the db connection string
                 {
                     Console.Write("Establishing db connection...");
                     con.Open();     // open db for use
@@ -72,7 +98,7 @@ namespace LootConsoleApp
 
                     Console.Write("Creating sql command...");
                     // build sql insert command with loot values
-                    using (com = new SqlCommand("INSERT INTO LootDataTable(dateNow, gold, elixer, dark, trophies) VALUES(" + 
+                    using (com = new SqlCommand("INSERT INTO LootRecords(dateNow, gold, elixer, dark, trophies) VALUES(" + 
                         "@dateNow, @gold, @elixer, @dark, @trophies)", con))
                     {
                         com.Parameters.AddWithValue("dateNow", localDate);  // add values to sql command
@@ -86,6 +112,7 @@ namespace LootConsoleApp
                             Console.Write("Inserting data into db...");
                             com.ExecuteNonQuery();  // execute INSERT command
                             Console.WriteLine(" Loot data successfully inserted to db!");
+                            con.Close();
                         }
                         catch (SqlException e)
                         {
@@ -101,6 +128,55 @@ namespace LootConsoleApp
                 Console.WriteLine("Failed to connect to db");
             }
 
+            Console.WriteLine();
+            Console.WriteLine("Operation Complete");
+            Environment.Exit(0);
+
         }  // end main
+
+        private static void DeleteRow(int id)
+        {
+            SqlConnection con;      // connection variables
+            SqlCommand com;
+            try
+            {
+                using (con = new SqlConnection(Properties.Settings.Default.newLootConStr)) // new sql connection using the db connection string
+                {
+                    Console.Write("Establishing db connection...");
+                    con.Open();     // open db for use
+                    Console.WriteLine(" Connected to db!");
+
+                    Console.Write("Creating sql command...");
+                    // build sql insert command with loot values
+                    using (com = new SqlCommand("DELETE FROM LootRecords " +
+                        "WHERE Id=@Id", con))
+                    {
+                        com.Parameters.AddWithValue("@Id", id);  // add values to sql command
+                        
+                        Console.WriteLine("Values added to sql command!");
+                        try
+                        {
+                            Console.Write("Deleting row from db...");
+                            com.ExecuteNonQuery();  // execute INSERT command
+                            Console.WriteLine(" Loot data successfully removed from db!");
+                            con.Close();
+                        }
+                        catch (SqlException e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.WriteLine("Failed to delete row from db");
+                        }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Failed to connect to db");
+            }
+        }
+
+
+
     }  // end class Program
 }  // end namespace
