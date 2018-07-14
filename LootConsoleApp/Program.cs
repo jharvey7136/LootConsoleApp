@@ -26,8 +26,9 @@ namespace LootConsoleApp
             SqlCommand com;
             DateTime localDate = DateTime.Now;  // date now for loot logging date
 
-            
-             // helper code to delete rows when needed
+
+            // helper code to delete rows when needed
+            /*             
             string line;
             int rowRemove;
 
@@ -45,7 +46,7 @@ namespace LootConsoleApp
                     DeleteRow(rowRemove);
                 }
             } while (line != "exit");
-            
+            */
 
 
             try   // connect to clash API
