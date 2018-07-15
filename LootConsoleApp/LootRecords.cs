@@ -119,7 +119,7 @@ namespace LootConsoleApp
         }
 
 
-        private static void DeleteRow(int id)
+        public void DeleteRow(int id)
         {
             SqlConnection con;      // connection variables
             SqlCommand com;

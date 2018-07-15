@@ -36,6 +36,7 @@ namespace LootConsoleApp
             Console.WriteLine("1. GetLootRecords");     
             Console.WriteLine("2. GetClanDetails");
             Console.WriteLine("3. GetMemberList");
+            Console.WriteLine("4. DeleteMemberRow");
             Console.Write("Enter Selection: ");
             string line = Console.ReadLine();            
 
@@ -49,6 +50,9 @@ namespace LootConsoleApp
                     break;
                 case 3:
                     GetMemberList();
+                    break;
+                case 4:
+                    DeleteMemberRow();
                     break;
                 default:
                     Environment.Exit(0);
@@ -100,6 +104,36 @@ namespace LootConsoleApp
                 Console.WriteLine("Failed to execute 'GetMemberList'");
             }
         }
+
+
+        private static void DeleteMemberRow()
+        {
+            // helper code to delete rows when needed
+
+            MemberList myMemberList = new MemberList();
+
+            Console.WriteLine();
+                         
+            string line;
+            int rowRemove;
+
+            do
+            {
+                Console.Write("Enter row Id to delete, or type exit: ");
+                line = Console.ReadLine();
+                if (line == "exit")
+                {
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    rowRemove = Convert.ToInt32(line);
+                    myMemberList.DeleteRow(rowRemove);
+                }
+            } while (line != "exit");
+            
+        }
+
 
 
 
