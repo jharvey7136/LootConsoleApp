@@ -16,25 +16,47 @@ using CocNET.Interfaces;
 namespace LootConsoleApp
 {
     class Program
-    {
-        
+    {        
         
         static void Main(string[] args)
         {
+            
+            int seletion;
+            /*
+            int b = Convert.ToInt32(args[0]);
 
-            GetClanDetails();
+            if (b == 1)
+            {
+                GetLootRecords();
+                Environment.Exit(0);
+            }
+            */
 
-            Console.WriteLine("1. GetLootRecords");
+            // simple menu
+            Console.WriteLine("1. GetLootRecords");     
             Console.WriteLine("2. GetClanDetails");
+            Console.WriteLine("3. GetMemberList");
+            Console.Write("Enter Selection: ");
+            string line = Console.ReadLine();            
 
-
-
-
+            switch (seletion = Convert.ToInt32(line))
+            {
+                case 1:
+                    GetLootRecords();
+                    break;
+                case 2:
+                    GetClanDetails();
+                    break;
+                case 3:
+                    GetMemberList();
+                    break;
+                default:
+                    Environment.Exit(0);
+                    break;
+            }
         }  // end main
 
-        
-
-
+        //*********************** GET CLAN DETAILS ***********************
         private static void GetClanDetails()
         {
             ClanDetails fetchClan = new ClanDetails();
@@ -49,6 +71,7 @@ namespace LootConsoleApp
             }
         }
 
+        //*********************** GET LOOT RECORDS ***********************
         private static void GetLootRecords()
         {
             LootRecords fetchLoot = new LootRecords();
@@ -63,7 +86,20 @@ namespace LootConsoleApp
             }
         }
 
-
+        //*********************** GET LOOT RECORDS ***********************
+        private static void GetMemberList()
+        {
+            MemberList fetchMembers = new MemberList();
+            try
+            {
+                fetchMembers.GetMemberList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Failed to execute 'GetMemberList'");
+            }
+        }
 
 
 
