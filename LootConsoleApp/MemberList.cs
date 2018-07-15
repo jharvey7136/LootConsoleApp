@@ -41,7 +41,7 @@ namespace LootConsoleApp
 
                 ICocCoreClans clansCore = container.Resolve<ICocCoreClans>();  // CoCNET interface config to clans
 
-                Console.WriteLine(" Connection Established!");
+                Console.WriteLine("     Connection Established!");
 
                 try  // fetch loot data
                 {
@@ -64,11 +64,11 @@ namespace LootConsoleApp
                         member.ClanRank = obj.ClanRank;
                         member.Donations = obj.Donations;
                         member.DonationsReceived = obj.DonationsReceived;
-                        member.LocalDate = localDate;                        
+                        member.LocalDate = localDate;
                         myMemberList.Add(member);
                     }
-                    Console.WriteLine();
-                    Console.WriteLine("Member details fetched!");
+                    //Console.WriteLine();
+                    Console.WriteLine("     Member details fetched!");
                 }
                 catch (Exception e)
                 {
@@ -84,31 +84,33 @@ namespace LootConsoleApp
             }
 
             Console.WriteLine();
-            Console.WriteLine();
+            //Console.WriteLine();
 
-            
+            /*
             foreach (var member in myMemberList)
             {
                 Console.WriteLine(member.Name);
             }
-            
-                        
+            */
+
             try
             {
                 using (con = new SqlConnection(Properties.Settings.Default.newLootConStr)) // new sql connection using the db connection string
                 {
                     Console.Write("Establishing db connection...");
                     con.Open();     // open db for use
-                    Console.WriteLine(" Connected to db!");
+                    Console.WriteLine("     Connected to db!");
 
-                    Console.Write("Creating sql command...");
-                    // build sql insert command with loot values
-                    using (com = new SqlCommand("AddMemberDetails", con))
+                    foreach (var member in myMemberList)
                     {
-                        com.CommandType = CommandType.StoredProcedure;
+                        //Console.WriteLine();
+                        Console.Write("Creating sql command...");
+                        // build sql insert command with loot values
 
-                        foreach (var member in myMemberList)
+                        using (com = new SqlCommand("AddMemberDetails", con))
                         {
+                            com.CommandType = CommandType.StoredProcedure;
+
                             com.Parameters.AddWithValue("@tag", member.Tag);  // add values to sql command
                             com.Parameters.AddWithValue("@name", member.Name);  // add values to sql command
                             com.Parameters.AddWithValue("@expLevel", member.ExpLevel);  // add values to sql command
@@ -122,20 +124,22 @@ namespace LootConsoleApp
                             com.Parameters.AddWithValue("@donationsReceived", member.DonationsReceived);  // add values to sql command
                             com.Parameters.AddWithValue("@dateNow", member.LocalDate);  // add values to sql command
 
-                            Console.WriteLine("Values added to sql command!");
+                            Console.WriteLine("     Values added to sql command!");
                             try
                             {
-                                Console.Write("Inserting member into db...");
+                                //Console.WriteLine();
+                                Console.Write("Inserting " + member.Name +  " member into db...");
                                 com.ExecuteNonQuery();  // execute INSERT command
-                                Console.WriteLine("Member successfully inserted to db!");
-                                
+                                Console.WriteLine("     " + member.Name + " successfully inserted to db!");
+
                             }
                             catch (SqlException e)
                             {
+                                Console.WriteLine();
                                 Console.WriteLine(e.Message);
                                 Console.WriteLine("Failed to insert data to db");
                             }
-                        }                       
+                        }
 
                     }
                     con.Close();
@@ -145,9 +149,9 @@ namespace LootConsoleApp
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Failed to connect to db");
-                
+
             }
-            
+
 
             Console.WriteLine();
             Console.WriteLine("Operation Complete");
@@ -199,8 +203,8 @@ namespace LootConsoleApp
 
 
     public class Member
-    {        
-        public string Tag { get; set; }       
+    {
+        public string Tag { get; set; }
         public string Name { get; set; }
         public int ExpLevel { get; set; }
         public int LeagueID { get; set; }
@@ -210,7 +214,7 @@ namespace LootConsoleApp
         public string Role { get; set; }
         public int ClanRank { get; set; }
         public int Donations { get; set; }
-        public int DonationsReceived { get; set; }        
+        public int DonationsReceived { get; set; }
         public DateTime LocalDate { get; set; }
     }
 
