@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CocNET">
+    <Reference Include="CocNET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\git\CocNET\CocNET\CocNET\bin\Debug\CocNET.dll</HintPath>
     </Reference>
     <Reference Include="Funq">
@@ -58,6 +59,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="WarLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

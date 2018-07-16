@@ -37,6 +37,7 @@ namespace LootConsoleApp
             Console.WriteLine("2. GetClanDetails");
             Console.WriteLine("3. GetMemberList");
             Console.WriteLine("4. DeleteMemberRow");
+            Console.WriteLine("5. GetWarLogs");
             Console.Write("Enter Selection: ");
             string line = Console.ReadLine();            
 
@@ -53,6 +54,9 @@ namespace LootConsoleApp
                     break;
                 case 4:
                     DeleteMemberRow();
+                    break;
+                case 5:
+                    GetWarLogs();
                     break;
                 default:
                     Environment.Exit(0);
@@ -105,7 +109,7 @@ namespace LootConsoleApp
             }
         }
 
-
+        //*********************** DELETE MEMBER ROW ***********************
         private static void DeleteMemberRow()
         {
             // helper code to delete rows when needed
@@ -132,6 +136,21 @@ namespace LootConsoleApp
                 }
             } while (line != "exit");
             
+        }
+
+        //*********************** GET WAR LOGS ***********************
+        private static void GetWarLogs()
+        {
+            WarLog fetchWarLogs = new WarLog();
+            try
+            {
+                fetchWarLogs.GetWarLog();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Failed to execute 'GetWarLogs'");
+            }
         }
 
 
